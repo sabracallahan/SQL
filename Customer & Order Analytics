@@ -69,9 +69,9 @@ WHERE Product LIKE '%Headphones%';
 
 --List all the products sold in Los Angeles in February, and include how many of each were sold.
 
-SELECT DISTINCT Product, SUM(Quantity)
+SELECT Product, SUM(Quantity)
 FROM BIT_DB.FebSales
 WHERE location LIKE '%Los Angeles%'
-ORDER BY Quantity;
+ORDER BY Product;
 
 ```
