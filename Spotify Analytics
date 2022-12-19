@@ -72,4 +72,19 @@ WHERE artist_name = 'Ed Sheeran';
 SELECT track_name, artist_name, danceability
 FROM BIT_DB.Spotifydata
 ORDER BY danceability DESC LIMIT 5;
+
+--Calculate the average popularity for the artists, for every artist with an average popularity of 90 or above, 
+--show their name, their average popularity, and label them as a “Top Star”.
+
+WITH avg_table AS 
+(SELECT s.artist_name, 
+AVG(s.popularity) AS average_popularity
+FROM Spotifydata s
+GROUP BY s.artist_name)
+SELECT artist_name, 
+average_popularity, 'Top Star' AS tag
+FROM avg_table
+WHERE average_popularity>=90
+ORDER BY average_popularity DESC;
+
 ```
