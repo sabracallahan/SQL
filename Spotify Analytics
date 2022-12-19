@@ -1,0 +1,75 @@
+```
+--For this project, I downloaded 'Spotify top 50 songs in 2021' dataset from Kaggle:
+--https://www.kaggle.com/datasets/equinxx/spotify-top-50-songs-in-2021?select=spotify_top50_2021.csv
+--created a table to insert the data into and performed analytics on the data using SQL (SQLiteStudio)
+
+--Create the table
+
+CREATE TABLE BIT_DB.Spotifydata (
+id integer PRIMARY KEY,
+artist_name varchar NOT NULL,
+track_name varchar NOT NULL,
+track_id varchar NOT NULL,
+popularity integer NOT NULL,
+danceability decimal(4,3) NOT NULL,
+energy decimal(4,3) NOT NULL,
+song_key integer NOT NULL,
+loudness decimal(5,3) NOT NULL,
+song_mode integer NOT NULL,
+speechiness decimal(5,4) NOT NULL,
+acousticness decimal(6,5) NOT NULL,
+instrumentalness text NOT NULL,
+liveness decimal(5,4) NOT NULL,
+valence decimal(4,3) NOT NULL,
+tempo decimal(6,3) NOT NULL,
+duration_ms integer NOT NULL,
+time_signature integer NOT NULL );
+
+--Import Spotify data.csv into the table
+
+--Explore the data
+
+SELECT * FROM BIT_DB.Spotifydata LIMIT 10;
+
+--Find the avg popularity, danceability, and energy.
+
+SELECT AVG(popularity), AVG(danceability), AVG(energy)
+FROM BIT_DB.Spotifydata;
+
+--What are the top 10 most popular songs/artists?
+
+SELECT track_name, artist_name, popularity
+FROM BIT_DB.Spotifydata
+ORDER BY popularity DESC LIMIT 10;
+
+--What is the loudest song?
+
+SELECT loudness, track_name, artist_name
+FROM BIT_DB.Spotifydata
+ORDER BY loudness ASC LIMIT 1;
+
+--What artist had the most songs on the top 50 list?
+
+SELECT artist_name, COUNT(track_id) AS num_songs
+FROM BIT_DB.Spotifydata
+GROUP BY artist_name
+ORDER BY COUNT(track_id) DESC LIMIT 1;
+
+--What songs of Olivia Rodrigo are on the top 50 list and what are the songs danceability scores?
+
+SELECT artist_name, track_name, danceability
+FROM BIT_DB.Spotifydata
+WHERE artist_name = 'Olivia Rodrigo';
+
+--How many Ed Sheeran songs made it to the top 50 list?
+
+SELECT artist_name, COUNT(track_name) AS num_songs
+FROM BIT_DB.Spotifydata
+WHERE artist_name = 'Ed Sheeran';
+
+--What are the top 5 most danceable songs?
+
+SELECT track_name, artist_name, danceability
+FROM BIT_DB.Spotifydata
+ORDER BY danceability DESC LIMIT 5;
+```
