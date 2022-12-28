@@ -1,0 +1,186 @@
+'''
+--Exploring the chinook public database using SQLiteStudio
+--database https://github.com/lerocha/chinook-database
+--table schema https://cdn.fs.teachablecdn.com/ADNupMnWyR7kCWRvm76Laz/https://www.filepicker.io/api/file/sF9aIU7TqOLNWWSSNrOp
+
+--Viewing the media types
+
+SELECT * FROM media_types;
+
+--Finding distribution of media types 
+
+SELECT COUNT(tracks.Name), media_types.Name
+FROM tracks
+JOIN media_types
+ON tracks.MediaTypeId=media_types.MediaTypeId
+ORDER BY tracks.MediaTypeId;
+
+--Number of playlists
+
+SELECT COUNT(Playlist_track.PlaylistId), playlists.Name
+FROM playlist_track
+JOIN playlists
+ON playlist_track.PlaylistId=playlists.PlaylistId
+ORDER BY playlist_track.PlaylistId;
+
+--What is the pricing for song tracks?
+
+SELECT DISTINCT(UnitPrice) AS Pricing
+FROM tracks
+ORDER BY UnitPrice DESC;
+
+--Which tracks were purchased most often?
+
+SELECT DISTINCT(tracks.Name) AS Song, 
+COUNT(invoice_items.Quantity) AS Number_purchased
+FROM tracks
+JOIN invoice_items
+ON tracks.TrackId=invoice_items.TrackId
+GROUP BY Song
+ORDER BY Number_purchased DESC;
+
+--Which tracks produced the most revenue?
+
+SELECT DISTINCT(tracks.Name) AS Song, 
+SUM(invoice_items.Quantity*invoice_items.UnitPrice) AS Revenue
+FROM tracks
+JOIN invoice_items
+ON tracks.TrackId=invoice_items.TrackId
+GROUP BY Song
+ORDER BY Revenue DESC;
+
+--Combination query comparing pricing vs units sold and revenue
+
+SELECT DISTINCT(tracks.Name) AS Song, 
+SUM(invoice_items.Quantity*invoice_items.UnitPrice) AS Revenue,
+COUNT(invoice_items.Quantity) AS Number_purchased,
+invoice_items.UnitPrice AS Price
+FROM tracks
+JOIN invoice_items
+ON tracks.TrackId=invoice_items.TrackId
+GROUP BY Song
+ORDER BY Revenue DESC;
+
+--Artist name, album name and genre for the top 5 revenue results
+
+SELECT DISTINCT(tracks.Name) AS Song, 
+albums.Title AS Album,
+artists.Name AS Artist,
+genres.Name AS Genre,
+SUM(invoice_items.Quantity*invoice_items.UnitPrice) AS Revenue,
+COUNT(invoice_items.Quantity) AS Number_purchased,
+invoice_items.UnitPrice AS Price
+FROM tracks
+INNER JOIN invoice_items ON tracks.TrackId=invoice_items.TrackId
+INNER JOIN albums ON tracks.AlbumId=albums.AlbumId
+INNER JOIN artists ON artists.ArtistId=albums.ArtistId
+INNER JOIN genres ON tracks.GenreId=genres.GenreId
+GROUP BY Song
+ORDER BY Revenue DESC LIMIT 5;
+
+--Top 5 genres by revenue
+
+SELECT DISTINCT(genres.Name) AS Genre,
+ROUND(SUM(invoice_items.Quantity*invoice_items.UnitPrice), 0) AS Revenue
+FROM genres
+INNER JOIN tracks ON genres.GenreId=tracks.GenreId
+INNER JOIN invoice_items ON tracks.TrackId=invoice_items.TrackId
+GROUP BY Genre
+ORDER BY Revenue DESC LIMIT 5;
+
+--Total amount invoiced per country
+
+SELECT DISTINCT(BillingCountry) AS Country, ROUND(SUM(Total), 0) AS Total
+FROM invoices
+GROUP BY BillingCountry
+ORDER BY SUM(Total) DESC;
+
+--Top 25 customers by revenue with email addresses for continued engagement emails (using || as CONCAT)
+
+SELECT DISTINCT(customers.FirstName || ' ' || customers.LastName) AS Name,
+customers.Email,
+SUM(invoices.Total) AS Revenue
+FROM customers
+INNER JOIN invoices ON customers.CustomerId=invoices.CustomerId
+GROUP BY Name
+ORDER BY Revenue DESC LIMIT 25;
+
+--Name, email and country of customers not located in the US
+
+SELECT (FirstName || ' ' || LastName) AS Name,
+Email,
+Country
+FROM customers
+WHERE Country <> 'USA'
+ORDER BY Country, LastName;
+
+--Invoices for all customers in Brazil including name, phone number, invoice date and amount
+
+SELECT (customers.FirstName || ' ' || customers.LastName) AS Name,
+customers.Phone,
+invoices.InvoiceDate AS Date,
+invoices.Total AS Amount,
+Country
+FROM customers
+INNER JOIN invoices ON customers.CustomerId=invoices.CustomerId
+WHERE Country = 'Brazil'
+ORDER BY LastName;
+
+--Employees in the sales department
+
+SELECT (FirstName || ' ' || LastName) AS Name,
+Title
+FROM employees
+WHERE Title LIKE '%sales%';
+
+--List all the invoices with revenue associated to each sales person
+
+SELECT (employees.FirstName || ' ' || employees.LastName) AS Name,
+employees.Title,
+invoices.InvoiceId,
+invoices.Total
+FROM employees
+INNER JOIN  customers ON employees.EmployeeId=customers.SupportRepId
+INNER JOIN invoices ON customers.CustomerId=invoices.CustomerId
+WHERE Title LIKE '%sales%'
+ORDER BY employees.LastName;
+
+--Summarize sales revenue by employee
+
+SELECT (employees.FirstName || ' ' || employees.LastName) AS Name,
+employees.Title,
+COUNT(invoices.InvoiceId) AS total_invoices,
+ROUND(SUM(invoices.Total), 0) AS total_revenue
+FROM employees
+INNER JOIN  customers ON employees.EmployeeId=customers.SupportRepId
+INNER JOIN invoices ON customers.CustomerId=invoices.CustomerId
+WHERE Title LIKE '%sales%'
+GROUP BY Name
+ORDER BY total_revenue DESC;
+
+--Date range of invoices included in this dataset
+
+SELECT MIN(InvoiceDate) AS Invoices_from,
+MAX(InvoiceDate) AS Invoices_to
+FROM invoices;
+
+--Total revenue generated in 2010
+
+SELECT ROUND(SUM(Total), 0)
+FROM invoices
+WHERE InvoiceDate LIKE '2010%';
+
+--Revenue by sales person by year
+
+SELECT (employees.FirstName || ' ' || employees.LastName) AS Employee,
+employees.Title,
+strftime('%Y', invoices.InvoiceDate) AS Year,
+ROUND(SUM(invoices.Total), 0) AS Revenue
+FROM employees
+INNER JOIN  customers ON employees.EmployeeId=customers.SupportRepId
+INNER JOIN invoices ON customers.CustomerId=invoices.CustomerId
+WHERE Title LIKE '%sales%'
+GROUP BY Year, Employee
+ORDER BY Employee;
+
+'''
