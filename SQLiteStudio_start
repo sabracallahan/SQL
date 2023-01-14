@@ -4,7 +4,7 @@ First let me just say that the best resources for SQLiteStudio in my opinion are
 
 1 Create a database for your projects:
 
-Database, Add Database, type the name of the database you want to create in the file browser window projects.db and click ok.
+Database, Add Database, type the name of the database you want to create in the file browser window (projects.db) and click ok.
 
 That's it! This took me hours of searching to figure out. I can't be the only one.
 
@@ -16,7 +16,12 @@ If you get the data from a source like Kaggle you can preview it before download
 
 3 Create a table syntax
 
-CREATE TABLE database_name.table_name( column1 datatype, column2 datatype, column3 datatype, ..... columnN datatype );
+CREATE TABLE database_name.table_name( 
+column1 datatype, 
+column2 datatype, 
+column3 datatype, 
+..... 
+columnN datatype );
 
 Basic data types used in creating tables:
 
