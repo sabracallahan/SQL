@@ -1,0 +1,71 @@
+```
+Starting from the very beginning SQLiteStudio
+First let me just say that the best resources for SQLiteStudio in my opinion are in the help menu, User Manual & SQLite Documentation.
+
+1 Create a database for your projects:
+
+Database, Add Database, type the name of the database you want to create in the file browser window projects.db and click ok.
+
+That's it! This took me hours of searching to figure out. I can't be the only one.
+
+2 Connect to the new database
+
+In the meantime you need have an idea of what is in the file you want to import in terms of columns and data. If it's not too large, 
+you may want to open it in Excel and take a look. This information will be needed to create the right table to import the data into. 
+If you get the data from a source like Kaggle you can preview it before downloading so you know the columns and data types. Very helpful!
+
+3 Create a table syntax
+
+CREATE TABLE database_name.table_name( column1 datatype, column2 datatype, column3 datatype, ..... columnN datatype );
+
+Basic data types used in creating tables:
+
+TEXT - text string (ex Name)
+CHARACTER - CHAR or VARCHAR (ex Address)
+INTEGER - INT number (ex Age)
+REAL - numberic data with a decimal point (ex Salary)
+DATE
+DATETIME
+I am simplifying this some so if you want to know what they get stored as go to the SQLite Documentation under Affinity types.
+
+If you are importing multiple tables, you will need a PRIMARY KEY in each table to join the tables. When the key is in the data, 
+here's how you assign it:
+
+CREATE TABLE database_name.table_name( 
+column1 datatype PRIMARY KEY, 
+column2 datatype, 
+column3 datatype, 
+..... 
+columnN datatype );
+
+Or if you want to auto create a PRIMARY KEY:
+
+CREATE TABLE database_name.table_name( 
+ID INTEGER PRIMARY KEY AUTOINCREMENT, 
+column2 datatype, 
+column3 datatype, 
+column4 datatype, 
+..... 
+columnN datatype );
+
+Basic constraint options for columns when creating tables:
+
+UNIQUE - ensures that all values in the column are different.
+NOT NULL - ensures that a column cannot have NULL values.
+DEFAULT value - when NULL a default value as defined will be populated.
+4 Import .csv file - Tools, Import, Table to Import to choose table, continue, browse to find the .csv file, Open, Done.
+
+You are now ready to wrangle your data in SQLiteStudio!
+
+Okay so if you made it this far and kept going, maybe you had an error importing your data...me too, baby steps!
+
+Read the error it will help direct you to what happened. If you are like me, I used a slightly different column name than the exact 
+name on the file. Tempermental, clearly not allowed. Whoops
+
+Bonus 5 Here's how to fix that:
+
+ALTER TABLE table_name 
+RENAME COLUMN current_name TO new_name;
+
+Keep going, every day you get a little closer to mastering SQL!
+```
