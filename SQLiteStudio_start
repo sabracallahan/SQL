@@ -31,6 +31,7 @@ INTEGER - INT number (ex Age)
 REAL - numberic data with a decimal point (ex Salary)
 DATE
 DATETIME
+
 I am simplifying this some so if you want to know what they get stored as go to the SQLite Documentation under Affinity types.
 
 If you are importing multiple tables, you will need a PRIMARY KEY in each table to join the tables. When the key is in the data, 
@@ -58,6 +59,7 @@ Basic constraint options for columns when creating tables:
 UNIQUE - ensures that all values in the column are different.
 NOT NULL - ensures that a column cannot have NULL values.
 DEFAULT value - when NULL a default value as defined will be populated.
+
 4 Import .csv file - Tools, Import, Table to Import to choose table, continue, browse to find the .csv file, Open, Done.
 
 You are now ready to wrangle your data in SQLiteStudio!
