@@ -1,7 +1,7 @@
-
-###Starting from the very beginning SQLiteStudio
-##First let me just say that the best resources for SQLiteStudio in my opinion are in the help menu, User Manual & SQLite Documentation.
 ```
+Starting from the very beginning SQLiteStudio
+First let me just say that the best resources for SQLiteStudio in my opinion are in the help menu, User Manual & SQLite Documentation.
+
 1 Create a database for your projects:
 
 Database, Add Database, type the name of the database you want to create in the file browser window (projects.db) and click ok.
